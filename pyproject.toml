@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "localcord"
+version = "0.0.1"
+description = "Local Discord API emulator for testing bots offline. No token, no rate limits, any language."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "Bytewave1" }]
+keywords = ["discord", "bot", "testing", "mock", "emulator"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Testing",
+]
+dependencies = ["aiohttp>=3.9"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-aiohttp>=1.0", "ruff>=0.6"]
+
+[project.scripts]
+localcord = "localcord.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Bytewave1/localcord"
+Issues = "https://github.com/Bytewave1/localcord/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/localcord"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
