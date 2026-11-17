@@ -20,7 +20,7 @@ classifiers = [
 dependencies = ["aiohttp>=3.9"]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "pytest-aiohttp>=1.0", "ruff>=0.6"]
+dev = ["pytest>=8", "pytest-aiohttp>=1.0", "ruff>=0.6", "discord.py>=2.4"]
 
 [project.scripts]
 localcord = "localcord.cli:main"

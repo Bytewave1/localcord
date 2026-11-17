@@ -1,18 +1,25 @@
 """Builds the aiohttp application that serves the emulated API."""
 
+from __future__ import annotations
+
 from aiohttp import web
 
-from . import __version__
+from .control import create_control_app
+from .gateway import GATEWAY_PATH, gateway_handler
+from .keys import STATE
+from .rest import create_api_app
+from .state import State
 
-API_PREFIX = "/api/v10"
+# Versioned prefixes first, so "/api" only catches unversioned requests.
+API_PREFIXES = ("/api/v10", "/api/v9", "/api")
 CONTROL_PREFIX = "/_control"
 
 
-async def health(request: web.Request) -> web.Response:
-    return web.json_response({"status": "ok", "version": __version__})
-
-
-def create_app() -> web.Application:
+def create_app(state: State | None = None) -> web.Application:
     app = web.Application()
-    app.router.add_get(f"{CONTROL_PREFIX}/health", health)
+    app[STATE] = state or State.default()
+    app.router.add_get(GATEWAY_PATH, gateway_handler)
+    app.add_subapp(CONTROL_PREFIX, create_control_app())
+    for prefix in API_PREFIXES:
+        app.add_subapp(prefix, create_api_app())
     return app
